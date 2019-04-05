@@ -52,4 +52,72 @@ public:
         
         return intStr;
     }
+
+
+    /* simpler code */
+    int myAtoi(string str) {
+
+            unsigned int length = str.size();
+            if(length==0)
+                return 0;
+
+            const char *charArray = str.c_str();
+            unsigned short intValueOfChar=0;
+            unsigned int index = 0;
+            bool negativeFlag = 0;
+            bool exceedFlag = 0;
+            int returnValue = 0;
+
+            //left trim
+            while (charArray[index] == ' ')
+                index++;
+
+            if(charArray[index]=='-'){
+                negativeFlag=1;
+                index++;
+            } else if(charArray[index]=='+'){
+                index++;
+            }
+
+            while(index<length){
+                intValueOfChar = charArray[index]-'0';
+                //cout<<intValueOfChar<<endl;
+                if(intValueOfChar<0 || intValueOfChar>9)
+                    break;
+                else{
+                    if((returnValue>INT_MAX/10) || (returnValue==INT_MAX/10 && intValueOfChar>7) ){
+                        exceedFlag=1;
+                        returnValue=INT_MAX;
+                        break;
+                    } else {
+                        returnValue*=10;
+                        returnValue+=intValueOfChar;
+                    }
+                }
+                index++;
+            }
+
+            if(negativeFlag){
+                if(exceedFlag)
+                    returnValue=INT_MIN;
+                else
+                    returnValue*=-1;
+            }
+
+            return returnValue;
+        }
 };
+
+
+int main() {
+	Solution obj;
+	
+	cout<<obj.myAtoi("-91283472332")<<endl;
+	cout<<obj.myAtoi("2147483647")<<endl; //INT_MAX
+	cout<<obj.myAtoi("-2147483648")<<endl; //INT_MIN
+	cout<<obj.myAtoi("   -42")<<endl;
+	cout<<obj.myAtoi("4193 with words")<<endl;
+	cout<<obj.myAtoi("-1")<<endl;
+	cout<<obj.myAtoi("+123123")<<endl;
+	cout<<obj.myAtoi("+-2")<<endl;
+}
